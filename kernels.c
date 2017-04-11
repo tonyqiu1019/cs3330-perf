@@ -41,18 +41,40 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 }
 
 /*
- * rotate - Another version of rotate
+ * rotate - Our versions of rotate by cache blocking
  */
-char rotate_descr[] = "rotate: Current working version";
+char rotate_descr[] = "rotate: 8 by 1 block";
 void rotate(int dim, pixel *src, pixel *dst)
 {
-    int i, j;
+    int i, j, k, l;
+    int i_step = 8, j_step = 1;
 
-    for (i = 0; i < dim; i += 2) {
-        for (j = 0; j < dim; j++) {
-            dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
-            if (i+1 >= dim) return;
-            dst[RIDX(dim-1-j, i+1, dim)] = src[RIDX(i+1, j, dim)];
+    for (i = 0; i < dim; i += i_step) {
+        for (j = 0; j < dim; j += j_step) {
+            for (k = 0; k < i_step; k++) {
+                for (l = 0; l < j_step; l++) {
+                    dst[RIDX(dim-1-j-l, i+k, dim)]
+                        = src[RIDX(i+k, j+l, dim)];
+                }
+            }
+        }
+    }
+}
+
+char rotate_4x2_descr[] = "rotate: 4 by 2 block";
+void rotate_4x2(int dim, pixel *src, pixel *dst)
+{
+    int i, j, k, l;
+    int i_step = 4, j_step = 2;
+
+    for (i = 0; i < dim; i += i_step) {
+        for (j = 0; j < dim; j += j_step) {
+            for (k = 0; k < i_step; k++) {
+                for (l = 0; l < j_step; l++) {
+                    dst[RIDX(dim-1-j-l, i+k, dim)]
+                        = src[RIDX(i+k, j+l, dim)];
+                }
+            }
         }
     }
 }
@@ -70,6 +92,7 @@ void register_rotate_functions()
     add_rotate_function(&naive_rotate, naive_rotate_descr);
     add_rotate_function(&rotate, rotate_descr);
     /* ... Register additional test functions here */
+    add_rotate_function(&rotate_4x2, rotate_4x2_descr);
 }
 
 
