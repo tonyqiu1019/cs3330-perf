@@ -10,13 +10,13 @@
  * Please fill in the following team struct
  */
 team_t team = {
-    "bomb68",              /* Team name */
+    "bomb68",             /* Team name */
 
-    "Tong Qiu",     /* First member full name */
-    "tq7bw@virginia.edu",  /* First member email address */
+    "Tong Qiu",           /* First member full name */
+    "tq7bw@virginia.edu", /* First member email address */
 
-    "",                   /* Second member full name (leave blank if none) */
-    ""                    /* Second member email addr (leave blank if none) */
+    "Charlie Wu",         /* Second member full name (leave blank if none) */
+    "jw7jb@virginia.edu"  /* Second member email addr (leave blank if none) */
 };
 
 /***************
