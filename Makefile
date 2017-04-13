@@ -1,9 +1,9 @@
 # Student's Makefile for the CS:APP Performance Lab
 TEAM = bovik
 VERSION = 1
-HANDINDIR = 
+HANDINDIR =
 
-CC = gcc
+CC = gcc-6
 CFLAGS = -Wall -O2
 LIBS = -lm
 
@@ -17,7 +17,5 @@ driver: $(OBJS) fcyc.h clock.h defs.h config.h
 handin:
 	cp kernels.c $(HANDINDIR)/$(TEAM)-$(VERSION)-kernels.c
 
-clean: 
+clean:
 	-rm -f $(OBJS) driver core *~ *.o
-
-

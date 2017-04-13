@@ -189,12 +189,119 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
 /*
  * smooth - Another version of smooth.
  */
+
 char smooth_descr[] = "smooth: Current working version";
 void smooth(int dim, pixel *src, pixel *dst)
 {
-    naive_smooth(dim, src, dst);
-}
+    int i, j, red, green, blue;
 
+
+    j = 0;
+
+    red = src[RIDX(0, j, dim)].red + src[RIDX(1, j, dim)].red
+        + src[RIDX(0, j+1, dim)].red + src[RIDX(1, j+1, dim)].red;
+    green = src[RIDX(0, j, dim)].green + src[RIDX(1, j, dim)].green
+        + src[RIDX(0, j+1, dim)].green + src[RIDX(1, j+1, dim)].green;
+    blue = src[RIDX(0, j, dim)].blue + src[RIDX(1, j, dim)].blue
+        + src[RIDX(0, j+1, dim)].blue + src[RIDX(1, j+1, dim)].blue;
+
+    dst[RIDX(0, j, dim)].red = red / 4;
+    dst[RIDX(0, j, dim)].green = green / 4;
+    dst[RIDX(0, j, dim)].blue = blue / 4;
+
+    for (i = 1; i < dim-1; i++) {
+        red += src[RIDX(i+1, j, dim)].red + src[RIDX(i+1, j+1, dim)].red;
+        green += src[RIDX(i+1, j, dim)].green + src[RIDX(i+1, j+1, dim)].green;
+        blue += src[RIDX(i+1, j, dim)].blue + src[RIDX(i+1, j+1, dim)].blue;
+
+        dst[RIDX(i, j, dim)].red = red / 6;
+        dst[RIDX(i, j, dim)].green = green / 6;
+        dst[RIDX(i, j, dim)].blue = blue / 6;
+
+        red -= src[RIDX(i-1, j, dim)].red + src[RIDX(i-1, j+1, dim)].red;
+        green -= src[RIDX(i-1, j, dim)].green + src[RIDX(i-1, j+1, dim)].green;
+        blue -= src[RIDX(i-1, j, dim)].blue + src[RIDX(i-1, j+1, dim)].blue;
+    }
+
+    dst[RIDX(dim-1, j, dim)].red = red / 4;
+    dst[RIDX(dim-1, j, dim)].green = green / 4;
+    dst[RIDX(dim-1, j, dim)].blue = blue / 4;
+
+
+    for (j = 1; j < dim-1; j++) {
+        red = src[RIDX(0, j-1, dim)].red + src[RIDX(1, j-1, dim)].red
+            + src[RIDX(0, j, dim)].red + src[RIDX(1, j, dim)].red
+            + src[RIDX(0, j+1, dim)].red + src[RIDX(1, j+1, dim)].red;
+
+        green = src[RIDX(0, j-1, dim)].green + src[RIDX(1, j-1, dim)].green
+            + src[RIDX(0, j, dim)].green + src[RIDX(1, j, dim)].green
+            + src[RIDX(0, j+1, dim)].green + src[RIDX(1, j+1, dim)].green;
+
+        blue = src[RIDX(0, j-1, dim)].blue + src[RIDX(1, j-1, dim)].blue
+            + src[RIDX(0, j, dim)].blue + src[RIDX(1, j, dim)].blue
+            + src[RIDX(0, j+1, dim)].blue + src[RIDX(1, j+1, dim)].blue;
+
+        dst[RIDX(0, j, dim)].red = red / 6;
+        dst[RIDX(0, j, dim)].green = green / 6;
+        dst[RIDX(0, j, dim)].blue = blue / 6;
+
+        for (i = 1; i < dim-1; i++) {
+            red += src[RIDX(i+1, j-1, dim)].red + src[RIDX(i+1, j, dim)].red
+                + src[RIDX(i+1, j+1, dim)].red;
+            green += src[RIDX(i+1, j-1, dim)].green + src[RIDX(i+1, j, dim)].green
+                + src[RIDX(i+1, j+1, dim)].green;
+            blue += src[RIDX(i+1, j-1, dim)].blue + src[RIDX(i+1, j, dim)].blue
+                + src[RIDX(i+1, j+1, dim)].blue;
+
+            dst[RIDX(i, j, dim)].red = red / 9;
+            dst[RIDX(i, j, dim)].green = green / 9;
+            dst[RIDX(i, j, dim)].blue = blue / 9;
+
+            red -= src[RIDX(i-1, j-1, dim)].red + src[RIDX(i-1, j, dim)].red
+                + src[RIDX(i-1, j+1, dim)].red;
+            green -= src[RIDX(i-1, j-1, dim)].green + src[RIDX(i-1, j, dim)].green
+                + src[RIDX(i-1, j+1, dim)].green;
+            blue -= src[RIDX(i-1, j-1, dim)].blue + src[RIDX(i-1, j, dim)].blue
+                + src[RIDX(i-1, j+1, dim)].blue;
+        }
+
+        dst[RIDX(dim-1, j, dim)].red = red / 6;
+        dst[RIDX(dim-1, j, dim)].green = green / 6;
+        dst[RIDX(dim-1, j, dim)].blue = blue / 6;
+    }
+
+
+    j = dim - 1;
+
+    red = src[RIDX(0, j-1, dim)].red + src[RIDX(1, j-1, dim)].red
+        + src[RIDX(0, j, dim)].red + src[RIDX(1, j, dim)].red;
+    green = src[RIDX(0, j-1, dim)].green + src[RIDX(1, j-1, dim)].green
+        + src[RIDX(0, j, dim)].green + src[RIDX(1, j, dim)].green;
+    blue = src[RIDX(0, j-1, dim)].blue + src[RIDX(1, j-1, dim)].blue
+        + src[RIDX(0, j, dim)].blue + src[RIDX(1, j, dim)].blue;
+
+    dst[RIDX(0, j, dim)].red = red / 4;
+    dst[RIDX(0, j, dim)].green = green / 4;
+    dst[RIDX(0, j, dim)].blue = blue / 4;
+
+    for (i = 1; i < dim-1; i++) {
+        red += src[RIDX(i+1, j-1, dim)].red + src[RIDX(i+1, j, dim)].red;
+        green += src[RIDX(i+1, j-1, dim)].green + src[RIDX(i+1, j, dim)].green;
+        blue += src[RIDX(i+1, j-1, dim)].blue + src[RIDX(i+1, j, dim)].blue;
+
+        dst[RIDX(i, j, dim)].red = red / 6;
+        dst[RIDX(i, j, dim)].green = green / 6;
+        dst[RIDX(i, j, dim)].blue = blue / 6;
+
+        red -= src[RIDX(i-1, j-1, dim)].red + src[RIDX(i-1, j, dim)].red;
+        green -= src[RIDX(i-1, j-1, dim)].green + src[RIDX(i-1, j, dim)].green;
+        blue -= src[RIDX(i-1, j-1, dim)].blue + src[RIDX(i-1, j, dim)].blue;
+    }
+
+    dst[RIDX(dim-1, j, dim)].red = red / 4;
+    dst[RIDX(dim-1, j, dim)].green = green / 4;
+    dst[RIDX(dim-1, j, dim)].blue = blue / 4;
+}
 
 /*********************************************************************
  * register_smooth_functions - Register all of your different versions
@@ -205,7 +312,7 @@ void smooth(int dim, pixel *src, pixel *dst)
  *********************************************************************/
 
 void register_smooth_functions() {
-    add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
+    add_smooth_function(&smooth, smooth_descr);
     /* ... Register additional test functions here */
 }
