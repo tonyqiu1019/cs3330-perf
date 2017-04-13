@@ -3,7 +3,7 @@ TEAM = bovik
 VERSION = 1
 HANDINDIR =
 
-CC = gcc-6
+CC = gcc
 CFLAGS = -Wall -O2
 LIBS = -lm
 
